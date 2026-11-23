@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live research tools | Agisilaos Papadogiannis</title>
+<meta name="description" content="Two live finance research tools by Agisilaos Papadogiannis, recomputed from current public data: Bitcoin's required return, and the returns of US covered-call funds.">
+<style>
+:root { --bg:#ffffff; --card:#f6f8fa; --line:#d1d9e0; --text:#1f2328; --muted:#59636e; --link:#0969da; --a:#2f6fde; --b:#b8690f; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0d1117; --card:#151b23; --line:#3d444d; --text:#e6edf3; --muted:#9198a1; --link:#4493f8; --a:#79aaff; --b:#f2b468; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; }
+main { max-width: 880px; margin: 0 auto; padding: 48px 16px 40px; }
+h1 { font-size: 1.9rem; line-height:1.2; margin: 0 0 6px; text-wrap: balance; }
+.who { color: var(--muted); margin: 0 0 14px; }
+.lead { font-size: 1.1rem; margin: 0 0 32px; max-width: 62ch; }
+article { background: var(--card); border:1px solid var(--line); border-radius: 12px; padding: 22px 22px 20px; margin: 0 0 22px; border-top: 4px solid var(--a); }
+article.b { border-top-color: var(--b); }
+h2 { font-size: 1.3rem; margin: 0 0 4px; }
+.sub { color: var(--muted); margin: 0 0 12px; }
+.latest { margin: 0 0 14px; font-variant-numeric: tabular-nums; }
+.latest b { color: var(--a); } article.b .latest b { color: var(--b); }
+img { display:block; width:100%; height:auto; margin: 0 0 6px; border-radius: 6px; }
+.cap { color: var(--muted); font-size: .85rem; margin: 0 0 16px; }
+a { color: var(--link); }
+.open { display:inline-block; background: var(--a); color:#fff; text-decoration:none; font-weight:600; padding: 9px 16px; border-radius: 8px; margin-right: 14px; }
+article.b .open { background: var(--b); }
+@media (prefers-color-scheme: dark) { .open { color:#0d1117; } }
+footer { color: var(--muted); font-size: .92rem; margin-top: 30px; }
+</style>
+</head>
+<body>
+<main>
+<h1>Live research tools</h1>
+<p class="who">Agisilaos Papadogiannis, independent finance research</p>
+<p class="lead">Research that keeps running. Each tool rebuilds itself from current public data, shows how every figure is computed, and publishes its results as open data files.</p>
+
+<article>
+<h2>Crypto Observatory</h2>
+<p class="sub">What return should Bitcoin's holders require, and did they get it? Recomputed every month.</p>
+<p class="latest" id="obs" hidden></p>
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/crypto-observatory-dark.svg">
+<img src="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/crypto-observatory-light.svg" alt="Bitcoin's required return since 2012 as a band with its midpoint, with the average required and delivered return of each three-year period marked on it">
+</picture>
+<p class="cap">The required return since 2012, and what each period delivered against it.</p>
+<p><a class="open" href="/crypto-observatory/">Open the tool</a> <a href="https://github.com/apapadogiannis/crypto-observatory">Code and data</a></p>
+</article>
+
+<article class="b">
+<h2>Covered-Call Monitor</h2>
+<p class="sub">What does the yield cost? Returns, written options and flows of US covered-call funds, rebuilt every quarter from SEC filings.</p>
+<p class="latest" id="ccm" hidden></p>
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/covered-call-monitor-dark.svg">
+<img src="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/covered-call-monitor-light.svg" alt="Total return over three years of five large covered-call funds, each beside the index fund on the same market">
+</picture>
+<p class="cap">Five of the largest funds over three years, each beside its index fund.</p>
+<p><a class="open" href="/covered-call-monitor/">Open the tool</a> <a href="https://github.com/apapadogiannis/covered-call-monitor">Code and data</a></p>
+</article>
+
+<footer>The papers behind the tools, with their data and code, are on <a href="https://github.com/apapadogiannis">my GitHub profile</a>.</footer>
+</main>
+<script>
+// The latest figures, read from the file the profile repository refreshes from the tools' own data.
+(function () {
+  var M = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  function month(s) { var p = s.split("-"); return M[+p[1] - 1] + " " + p[0]; }
+  function show(id, label, text) {
+    var el = document.getElementById(id), b = document.createElement("b");
+    b.textContent = label; el.appendChild(b); el.appendChild(document.createTextNode(" " + text)); el.hidden = false;
+  }
+  fetch("https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/live.json")
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (d) {
+      var o = d["crypto-observatory"], c = d["covered-call-monitor"];
+      if (o) show("obs", "Latest, " + month(o.month_end) + ":",
+        "Bitcoin's required return is " + o.required.midpoint.toFixed(1) + "% a year, within a range of " +
+        o.required.lower.toFixed(1) + "% to " + o.required.upper.toFixed(1) + "%.");
+      if (c) {
+        var n = c.beside_an_index_fund, k = c.returned_less;
+        show("ccm", "Latest, 12 months to " + month(c.to) + ":",
+          (k === n ? "all " + n : k + " of the " + n) +
+          " funds with an index fund on the same market returned less than it, distributions reinvested.");
+      }
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>
