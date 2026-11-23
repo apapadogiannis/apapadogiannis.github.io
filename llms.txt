@@ -1,0 +1,35 @@
+# Agisilaos Papadogiannis: live research tools
+
+> Three finance research tools. Two are recomputed from current public data and publish their
+> figures as data files; the third is a calculator that works from the numbers it is given. This
+> file says where each tool's own guide is. It holds no figures.
+
+Written for AI agents and other programs. People should start at https://apapadogiannis.github.io/
+
+## Tools
+
+- Crypto Observatory: Bitcoin's required return for market, concentration and mortality risk,
+  recomputed every month, with what Bitcoin delivered against it and a census of cryptoasset deaths.
+  Guide: https://apapadogiannis.github.io/crypto-observatory/llms.txt
+
+- Covered-Call Monitor: total returns, written calls, structured notes and net flows of US
+  covered-call, buy-write and premium-income funds, recomputed every quarter from SEC filings.
+  Guide: https://apapadogiannis.github.io/covered-call-monitor/llms.txt
+
+- Dual-Risk DCF Calculator: splits the gap between two views of an asset into the discount rate and
+  the forecast, from your own numbers; a page and an MCP server.
+  Guide: https://apapadogiannis.github.io/dual-risk-calculator/llms.txt
+
+Read a tool's guide before its data: it states what the figures are, how to read them, what they
+cannot answer and how to cite them.
+
+## The whole account
+
+The index of every tool, paper and replication package, with the tools' latest figures and one
+sentence on what each paper finds:
+https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/llms.txt
+
+One skill for an AI assistant covers all of it:
+https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/skill/SKILL.md
+
+Author: Agisilaos Papadogiannis, https://github.com/apapadogiannis
