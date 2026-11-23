@@ -1,7 +1,8 @@
 # apapadogiannis.github.io
 
-The landing page for my live research tools: https://apapadogiannis.github.io/
+The page of my live research tools: https://apapadogiannis.github.io/
 
-The page is one file, `index.html`. The pictures and latest figures on it are read from the
-[profile repository](https://github.com/apapadogiannis/apapadogiannis), which refreshes them from the tools' own data,
-so this page needs no upkeep of its own.
+The page is one file, `index.html`, and nothing about a tool is typed in it. It draws its cards from
+[`tools.json`](https://github.com/apapadogiannis/apapadogiannis/blob/main/tools.json) in the profile repository, which
+lists the tools with their latest figures and pictures and is refreshed there every month. A new tool appears here by
+itself once it is added to that repository.

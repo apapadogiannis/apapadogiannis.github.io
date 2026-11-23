@@ -37,56 +37,44 @@ footer { color: var(--muted); font-size: .92rem; margin-top: 30px; }
 <p class="who">Agisilaos Papadogiannis, independent finance research</p>
 <p class="lead">Research that keeps running. Each tool rebuilds itself from current public data, shows how every figure is computed, and publishes its results as open data files.</p>
 
-<article>
-<h2>Crypto Observatory</h2>
-<p class="sub">What return should Bitcoin's holders require, and did they get it? Recomputed every month.</p>
-<p class="latest" id="obs" hidden></p>
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/crypto-observatory-dark.svg">
-<img src="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/crypto-observatory-light.svg" alt="Bitcoin's required return since 2012 as a band with its midpoint, with the average required and delivered return of each three-year period marked on it">
-</picture>
-<p class="cap">The required return since 2012, and what each period delivered against it.</p>
-<p><a class="open" href="/crypto-observatory/">Open the tool</a> <a href="https://github.com/apapadogiannis/crypto-observatory">Code and data</a></p>
-</article>
-
-<article class="b">
-<h2>Covered-Call Monitor</h2>
-<p class="sub">What does the yield cost? Returns, written options and flows of US covered-call funds, rebuilt every quarter from SEC filings.</p>
-<p class="latest" id="ccm" hidden></p>
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/covered-call-monitor-dark.svg">
-<img src="https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/assets/covered-call-monitor-light.svg" alt="Total return over three years of five large covered-call funds, each beside the index fund on the same market">
-</picture>
-<p class="cap">Five of the largest funds over three years, each beside its index fund.</p>
-<p><a class="open" href="/covered-call-monitor/">Open the tool</a> <a href="https://github.com/apapadogiannis/covered-call-monitor">Code and data</a></p>
-</article>
+<div id="tools"></div>
+<noscript><p>The tools are listed on <a href="https://github.com/apapadogiannis">my GitHub profile</a>.</p></noscript>
 
 <footer>The papers behind the tools, with their data and code, are on <a href="https://github.com/apapadogiannis">my GitHub profile</a>.</footer>
 </main>
 <script>
-// The latest figures, read from the file the profile repository refreshes from the tools' own data.
+// The cards are drawn from tools.json, which the profile repository writes from its list of tools
+// and refreshes with their latest figures. Nothing about a tool is typed on this page.
 (function () {
-  var M = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  function month(s) { var p = s.split("-"); return M[+p[1] - 1] + " " + p[0]; }
-  function show(id, label, text) {
-    var el = document.getElementById(id), b = document.createElement("b");
-    b.textContent = label; el.appendChild(b); el.appendChild(document.createTextNode(" " + text)); el.hidden = false;
-  }
-  fetch("https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/live.json")
+  var box = document.getElementById("tools");
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+  function link(cls, text, href) { var a = el("a", cls, text); a.href = href; return a; }
+  fetch("https://raw.githubusercontent.com/apapadogiannis/apapadogiannis/main/tools.json")
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
     .then(function (d) {
-      var o = d["crypto-observatory"], c = d["covered-call-monitor"];
-      if (o) show("obs", "Latest, " + month(o.month_end) + ":",
-        "Bitcoin's required return is " + o.required.midpoint.toFixed(1) + "% a year, within a range of " +
-        o.required.lower.toFixed(1) + "% to " + o.required.upper.toFixed(1) + "%.");
-      if (c) {
-        var n = c.beside_an_index_fund, k = c.returned_less;
-        show("ccm", "Latest, 12 months to " + month(c.to) + ":",
-          (k === n ? "all " + n : k + " of the " + n) +
-          " funds with an index fund on the same market returned less than it, distributions reinvested.");
-      }
+      d.tools.forEach(function (t, i) {
+        var card = el("article", i % 2 ? "b" : "");
+        card.appendChild(el("h2", "", t.name));
+        card.appendChild(el("p", "sub", t.summary));
+        if (t.latest) {
+          var p = el("p", "latest"); p.appendChild(el("b", "", t.latest_label));
+          p.appendChild(document.createTextNode(" " + t.latest)); card.appendChild(p);
+        }
+        var pic = document.createElement("picture"), src = document.createElement("source"), img = document.createElement("img");
+        src.media = "(prefers-color-scheme: dark)"; src.srcset = t.picture_dark;
+        img.src = t.picture_light; img.alt = t.picture_alt;
+        pic.appendChild(src); pic.appendChild(img); card.appendChild(pic);
+        if (t.caption) card.appendChild(el("p", "cap", t.caption));
+        var row = el("p"); row.appendChild(link("open", "Open the tool", t.page));
+        row.appendChild(document.createTextNode(" ")); row.appendChild(link("", "Code and data", t.code));
+        card.appendChild(row); box.appendChild(card);
+      });
     })
-    .catch(function () {});
+    .catch(function () {
+      var p = el("p", "", "The tools could not be listed just now. They are on ");
+      p.appendChild(link("", "my GitHub profile", "https://github.com/apapadogiannis")); p.appendChild(document.createTextNode("."));
+      box.appendChild(p);
+    });
 })();
 </script>
 </body>
