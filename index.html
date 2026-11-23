@@ -66,6 +66,11 @@ footer { color: var(--muted); font-size: .92rem; margin-top: 30px; }
         img.src = t.picture_light; img.alt = t.picture_alt;
         pic.appendChild(src); pic.appendChild(img); card.appendChild(pic);
         if (t.caption) card.appendChild(el("p", "cap", t.caption));
+        if (t.paper) {
+          var src = el("p", "cap"); src.appendChild(document.createTextNode(t.paper_role + ": "));
+          src.appendChild(link("", t.paper, t.paper_url)); src.appendChild(document.createTextNode(" (" + t.paper_standing + ")"));
+          card.appendChild(src);
+        }
         var row = el("p"); row.appendChild(link("open", "Open the tool", t.page));
         row.appendChild(document.createTextNode(" ")); row.appendChild(link("", "Code and data", t.code));
         card.appendChild(row); box.appendChild(card);
