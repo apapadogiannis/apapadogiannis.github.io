@@ -9,3 +9,6 @@ itself once it is added to that repository.
 
 `llms.txt` is a short index for AI agents and programs: where each tool's own guide is, and where the index of the
 whole account is. It holds no figures. It names the tools by hand, so add a line to it when a tool is added.
+
+The page sets no cookies. It counts visits with GoatCounter, which sets no cookies and keeps no IP address: it records the page
+opened, the site the visitor came from, the browser, the screen size and the country.
